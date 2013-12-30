@@ -2,7 +2,7 @@
 
 class Cl_varnish_admin_upd 
 {
-	public $version = "1.0.0";
+	public $version = "1.1.0";
 	
 	private $addon_name = "Cl_varnish_admin";
 	private $has_cp_backend = "y";
@@ -34,6 +34,11 @@ class Cl_varnish_admin_upd
 		$this->_uninstall_actions();
 		$this->_uninstall_models();
 
+		return TRUE;
+	}
+	
+	function update($current = '')
+	{
 		return TRUE;
 	}
 	

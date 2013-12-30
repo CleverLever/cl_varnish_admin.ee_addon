@@ -2,7 +2,7 @@
 class Cl_varnish_admin_ext 
 {
 	public $name = "Varnish Admin";
-	public $version = "1.0.0";
+	public $version = "1.1.0";
 	public $description = "";
 	public $settings_exist = "y";
 	public $docs_url = "http://cleverlever.co/add-ons/varnish-admin";
@@ -142,6 +142,21 @@ class Cl_varnish_admin_ext
 	public function disable_extension() 
 	{
 		ee()->db->delete('extensions', array('class' => __CLASS__));
+	}
+	
+
+	function update_extension($current = '')
+	{
+		if ($current == '' OR $current == $this->version)
+		{
+			return FALSE;
+		}
+
+		$this->EE->db->where('class', __CLASS__);
+		$this->EE->db->update(
+			'extensions',
+			array('version' => $this->version)
+		);
 	}
 	
 	/**
