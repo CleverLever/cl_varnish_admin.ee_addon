@@ -23,7 +23,7 @@ Tags
 
 ### {exp:cl_varnish_admin:expire}
 
-Sets ExpressionEngines's response Expire and Cache-control header for the given template for Varnish to interpret.
+Sets ExpressionEngine's response Expire and Cache-control header for the given template for Varnish to interpret.
 
 #### Parameters
 
