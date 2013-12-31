@@ -4,8 +4,9 @@ Usage
 Requirements
 -----
 
-[Varnish](https://www.varnish-cache.org/trac/wiki/Installation)
-[PECL Varnish extension](http://www.php.net/manual/en/varnish.installation.php)*
+* [Varnish](https://www.varnish-cache.org/trac/wiki/Installation)
+* [PECL Varnish extension](http://www.php.net/manual/en/varnish.installation.php)* 
+
 * If you are having trouble installing the PECL Varnish extension you might need to run
 `apt-get install libvarnishapi-dev` prior to running the `pecl varnish install` command.
 
@@ -18,8 +19,8 @@ Configuration
 -----
 
 Set your Varnish server's settings using `Add-ons -> Varnish Admin -> Server Settings`. 
-For more information about configuring your Varnish server's administrative interface 
-refer to the [-T and -S options for varnishd](https://www.varnish-cache.org/docs/trunk/reference/varnishd.html).
+
+For more information about configuring your Varnish server's administrative interface refer to the [-T and -S options for varnishd](https://www.varnish-cache.org/docs/trunk/reference/varnishd.html).
 
 Tags
 -----
