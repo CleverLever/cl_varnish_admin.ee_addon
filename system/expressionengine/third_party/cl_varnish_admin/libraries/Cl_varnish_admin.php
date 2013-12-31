@@ -9,16 +9,16 @@ class Cl_varnish_admin {
 		if (!class_exists('VarnishAdmin')) die("Varnish PECL extension not installed.");
 		
 		$this->EE =& get_instance();
-		$this->EE->load->model('Cl_varnish_admin_settings_model');
-		
-		$this->varnish_config[VARNISH_CONFIG_HOST] = $this->EE->Cl_varnish_admin_settings_model->get('host');
-		$this->varnish_config[VARNISH_CONFIG_PORT] = $this->EE->Cl_varnish_admin_settings_model->get('port');
-		$this->varnish_config[VARNISH_CONFIG_SECRET] = $this->EE->Cl_varnish_admin_settings_model->get('secret');
-		$this->varnish_config[VARNISH_CONFIG_TIMEOUT] = 300;
+		$this->EE->load->model('Cl_varnish_admin_settings_model', 'settings');
 	}
 	
 	public function connectAndAuth() 
 	{
+		$this->varnish_config[VARNISH_CONFIG_HOST] = $this->EE->settings->get('host');
+		$this->varnish_config[VARNISH_CONFIG_PORT] = $this->EE->settings->get('port');
+		$this->varnish_config[VARNISH_CONFIG_SECRET] = $this->EE->settings->get('secret');
+		$this->varnish_config[VARNISH_CONFIG_TIMEOUT] = 300;
+
 		$va = new VarnishAdmin($this->varnish_config);
 
 		// connect
@@ -48,7 +48,7 @@ class Cl_varnish_admin {
 	{
 		$va = $this->connectAndAuth();
 		$exp = 'req.http.host == "' . parse_url($this->EE->config->item('site_url'), PHP_URL_HOST) . '" && req.url ~ "' . $url . '"';
-		error_log($exp);
+
 		$va->ban($exp);
 	}
 	
@@ -71,7 +71,7 @@ class Cl_varnish_admin {
 	public function warmUrl($url)
 	{
 		$url = "http://" . parse_url($this->EE->config->item('site_url'), PHP_URL_HOST) . $url;
-		error_log($url);
+
 		return file($url);
 	}
 	
