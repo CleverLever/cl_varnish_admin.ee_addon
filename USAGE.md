@@ -5,9 +5,9 @@ Requirements
 -----
 
 * [Varnish](https://www.varnish-cache.org/trac/wiki/Installation)
-* [PECL Varnish extension](http://www.php.net/manual/en/varnish.installation.php)* 
+* [PECL Varnish extension*](http://www.php.net/manual/en/varnish.installation.php)
 
-* If you are having trouble installing the PECL Varnish extension you might need to run
+*If you are having trouble installing the PECL Varnish extension you might need to run
 `apt-get install libvarnishapi-dev` prior to running the `pecl varnish install` command.
 
 Installation
