@@ -31,11 +31,27 @@ Sets ExpressionEngine's response Expire and Cache-control header for the given t
 
 #### Parameters
 
-+ on/in (required)
++ when (required)
 
-  Either the time in seconds or a string interpretable by [strtotime](http://php.net/strtotime). 
-  On/in are synonymous and just so your tag might read better.
+  Either the time in seconds or a string interpretable by [strtotime](http://php.net/strtotime).
 
   Examples: 
-    * `{exp:cl_varnish_admin:expire on="tomorrow at 1:00am"}` expires tomorrow at 1:00am (server timezone).
-    * `{exp:cl_varnish_admin:expire in="60"}` expires in 60 seconds
+    * `{exp:cl_varnish_admin:expire when="tomorrow at 1:00am"}` expires tomorrow at 1:00am (server timezone).
+    * `{exp:cl_varnish_admin:expire when="60"}` expires in 60 seconds
+
+### {exp:cl_varnish_admin:parse_esi}
+
+Tells varnish to processes <esi:include... /> tags for a given template. This send a header "X-Parse-Esi: 1" to varnish.
+
+  Varnish Configuration:
+
+  ```
+  sub vcl_fetch {
+	...
+	if (beresp.http.X-Parse-Esi) {
+        set beresp.do_esi = true;
+    }
+    unset beresp.http.X-Parse-Esi;
+    ...
+  }
+  ```

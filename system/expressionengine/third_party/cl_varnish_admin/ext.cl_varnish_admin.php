@@ -2,7 +2,7 @@
 class Cl_varnish_admin_ext 
 {
 	public $name = "Varnish Admin";
-	public $version = "1.1.0";
+	public $version = "1.2.0";
 	public $description = "";
 	public $settings_exist = "y";
 	public $docs_url = "http://cleverlever.co/add-ons/varnish-admin";
