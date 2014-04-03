@@ -2,6 +2,8 @@
 class Cl_varnish_admin_model extends CI_Model {
 
 	public $data;
+
+	protected $result;
 	
 	public function __construct() 
 	{
@@ -128,8 +130,11 @@ class Cl_varnish_admin_model extends CI_Model {
 	 */
 	public function get_act_url(string $method, array $data = array()) 
 	{
+		$this->load->helper('module_helper');
+		error_log(substr(__CLASS__, 0, "-6"));
+		
 		$query = $this->db->from('exp_actions')
-			->where('class', 'Cl_google_apis')
+			->where('class', substr(__CLASS__, 0, "-6"))
 			->where('method', $method);
 		$data['ACT'] = $query->get()->row()->action_id;
 		
@@ -167,12 +172,12 @@ class Cl_varnish_admin_model extends CI_Model {
 	 * @return boolean	TRUE/FALSE on success/failure
 	 * @author Chris LeBlanc
 	 */
-	public function save($where = array())
+	public function save($where = FALSE)
 	{
-		if ($this->db->from($this->table)->where($where)->count_all_results() > 0) {
+		if ($where && $this->db->from($this->table)->where($where)->count_all_results() > 0) {
 			return $this->db->where($where)->update($this->table, $this->data);
 		} else {
-			return $this->db->insert($this->table, $this->data);
+			return $this->db->insert($this->table, $this->data); 
 		}
 	}
 
@@ -189,9 +194,8 @@ class Cl_varnish_admin_model extends CI_Model {
 	public function delete($where)
 	{	
 		$query = $this->db->from($this->table);
-		
-		if (is_array($where)) $query->where(key($where), current($where));
-		else $query->where('id', $where);
+
+		$query->where($where);
 
 		return $query->delete();
 	}
@@ -225,6 +229,38 @@ class Cl_varnish_admin_model extends CI_Model {
 	{
 		$this->load->model('template_model');
 		return $this->template_model->get_template_groups();
+	}
+	
+	public function parse_tagdata($entry_id, $tagdata)
+	{
+		require_once PATH_MOD.'channel/mod.channel.php';
+
+		ee()->TMPL->tagdata = $tagdata;
+		ee()->TMPL->tagparams['entry_id'] = $entry_id;
+		ee()->TMPL->site_ids = array($this->config->item('site_id'));
+
+		$vars = ee()->functions->assign_variables($tagdata);
+		ee()->TMPL->var_single	= $vars['var_single'];
+		ee()->TMPL->var_pair		= $vars['var_pair'];
+
+		$channel = new Channel;
+		$channel->fetch_custom_channel_fields();
+		$channel->fetch_custom_member_fields();
+		$channel->build_sql_query();
+		$channel->query = ee()->db->query($channel->sql);				
+		$channel->parse_channel_entries();
+		
+		return $channel->return_data;
+	}
+	
+	public function result_array() 
+	{
+		return $this->result->result_array();
+	}
+	
+	public function row_array() 
+	{
+		return $this->result->row_array();
 	}
 
 	

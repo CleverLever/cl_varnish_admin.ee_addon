@@ -9,21 +9,21 @@ $(function () {
 });
 </script>
 
-<?=form_open('C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=cl_varnish_admin'.AMP.'method=clear_cache')?>
-<h2>Clear Cache</h2>
+<?=form_open('C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=cl_varnish_admin'.AMP.'method='.basename(__FILE__, '.php'))?>
+<h2>Utilities</h2>
 <table class="mainTable" border="0" cellspacing="0" cellpadding="0">
-	<tr><th colspan="2">Clear Items</th></th><th></th></tr>
+	<tr><th colspan="2">Clear Varnish Cache</th></th><th></th></tr>
 	<tr>
-		<td><label>Clear URL</label><div class="subtext">Clear items that BEGIN with the specified URL.</td>
+		<td><label>Clear URL Expression</label><div class="subtext">Clear items matching the provided VCL expression.</div></td>
 		<td>
-			<input type="text" name="url" value="" placeholder="ex: /pages">
+			<input type="text" name="url" value="" placeholder="ex: ^/pages$">
 		</td>
 		<td align="right">
 			<button name="action" type="submit" value="url" class="submit" style="cursor: pointer">Clear</button>
 		</td>
 	</tr>
 	<tr>
-		<td colspan="2"><label>Clear Site Cache</label></td>	
+		<td colspan="2"><label>Clear Site Cache</label><div class="subtext">Clear items matching the current site url.</div></td>	
 		<td align="right">
 			<button name="action" type="submit" value="site" class="submit" style="cursor: pointer">Clear Site Cache</button>
 		</td>

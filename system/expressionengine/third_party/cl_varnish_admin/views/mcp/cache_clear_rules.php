@@ -56,7 +56,6 @@ $(function () {
 			$clone.find(':input').val('');
 
 			var index = $(this).closest('.cache-clear-rules-options').find(".cache-clear-rules-options-url").length - 1;
-			console.log(index);
 			$clone.find(':input').each(function() { $(this).attr('name', $(this).attr('name').replace(/^(.+)(\[\w+\])(\[.+)$/, "$1["+index+"]$3")); }); 
 
 			init();
@@ -67,6 +66,7 @@ $(function () {
 		$("[data-role='add_rule']").unbind('click').click(function (e) {
 			$source = $(".cache-clear-rule").last();
 			$clone = $source.clone();
+			$clone.find('.cache-clear-rules-options-url:gt(0)').remove();
 			$source.after($clone);
 
 			$clone.find(':input').val('');
@@ -86,10 +86,10 @@ $(function () {
 <?=form_open('C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=cl_varnish_admin'.AMP.'method='.basename(__FILE__, '.php'))?>
 <!-- crappy default enter key button --><button style="overflow: visible !important; height: 0 !important; width: 0 !important; margin: 0 !important; border: 0 !important; padding: 0 !important; display: block !important;" type="submit" value=""></button>
 
-<h2>Cache Clear Settings</h2>
+<h2>Cache Clear Rules</h2>
 
 <table class="mainTable cache-clear-settings-rules" border="0" cellspacing="0" cellpadding="0">
-	<caption>Settings</caption>
+	<caption>Global Rules</caption>
 	<tr>
 		<td><label>Global Template Update Action</label><div class="subtext">Specify what should be cleared when a template is updated. This is executed in addition to any rules below.</div></td>
 		<td class="channel-action">
@@ -120,11 +120,11 @@ $(function () {
 		<? $rules = $cache_clear_rules->get_rules()->result_array() ?>
 		<? if (count($rules) > 0): ?>
 			<? foreach($cache_clear_rules->get_rules()->result_array() as $rule): ?>
-				<? include("cache_clear_settings/rule.php") ?>
+				<? include("cache_clear_rules/rule.php") ?>
 				<? $i++; ?>
 			<? endforeach ?>
 		<? else: ?>
-			<? include("cache_clear_settings/rule.php") ?>
+			<? include("cache_clear_rules/rule.php") ?>
 		<? endif ?>
 	</tbody>
 	<tfoot>

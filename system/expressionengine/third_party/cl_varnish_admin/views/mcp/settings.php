@@ -11,9 +11,9 @@ $(function () {
 
 <?=form_open('C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=cl_varnish_admin'.AMP.'method='.basename(__FILE__, '.php')) ?>
 
-<h2>Server Settings</h2>
+<h2>Settings</h2>
 <table class="mainTable" border="0" cellspacing="0" cellpadding="0">
-	<caption>Server Settings</caption>
+	<caption>Varnish Server Settings</caption>
 	<tr>
 		<td><label>Hostname or IP Address</label><div class="subtext">Varnish server hostname or IP address.</div></td>
 		<td>
@@ -33,6 +33,16 @@ $(function () {
 		</td>
 	</tr>
 </table>
+
+<!--<table class="mainTable" border="0" cellspacing="0" cellpadding="0">
+	<caption>Cron Settings</caption>
+	<tr>
+		<td><label>Warm URL</label><div class="subtext">Have a cron job hit this URL periodically to warm expired cached items.</div></td>
+		<td>
+			<input type="text" value="<?php echo @$settings->get_act_url('warm_expired_cached_item'); ?>" disabled />
+		</td>
+	</tr>
+</table>-->
 
 <div class="tableFooter">
 	<div class="tableSubmit">

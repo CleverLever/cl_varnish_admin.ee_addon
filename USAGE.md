@@ -41,7 +41,8 @@ Sets ExpressionEngine's response Expire and Cache-control header for the given t
 
 ### {exp:cl_varnish_admin:parse_esi}
 
-Tells varnish to processes <esi:include... /> tags for a given template. This send a header "X-Parse-Esi: 1" to varnish.
+Tells varnish to process <esi:include... /> tags for a given template. This just sends a header "X-Parse-Esi: 1" to varnish
+so you'll want to add the following to your Varnish configuration.
 
   Varnish Configuration:
 
@@ -55,3 +56,14 @@ Tells varnish to processes <esi:include... /> tags for a given template. This se
     ...
   }
   ```
+
+### {exp:cl_varnish_admin:warm_expired_cached_items}
+
+Warms expired cached items. Point your cronjob (or browser) to a template with this tag in it and it will run through 
+the warming process for cached items.  This is just an alternative to using the module action found in the settings. 
+
+#### Parameters
+
++ delay (default: `0`)
+
+  The delay between warm requests. Useful to prevent your server from getting hammered.
