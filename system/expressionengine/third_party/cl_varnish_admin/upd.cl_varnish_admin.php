@@ -2,7 +2,7 @@
 
 class Cl_varnish_admin_upd 
 {
-	public $version = "1.2.1";
+	public $version = "1.2.2";
 	
 	private $addon_name = "Cl_varnish_admin";
 	private $has_cp_backend = "y";
@@ -39,7 +39,7 @@ class Cl_varnish_admin_upd
 	
 	function update($current = '')
 	{
-		if (version_compare($current, "1.2.1", "<"))
+		if (version_compare($current, "1.2.2", "<"))
 		{
 			$this->EE->load->model('Cl_varnish_admin_cached_items_model');
 			$this->EE->Cl_varnish_admin_cached_items_model->create_table();

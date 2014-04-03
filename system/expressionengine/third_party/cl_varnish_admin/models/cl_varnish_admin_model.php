@@ -131,7 +131,6 @@ class Cl_varnish_admin_model extends CI_Model {
 	public function get_act_url(string $method, array $data = array()) 
 	{
 		$this->load->helper('module_helper');
-		error_log(substr(__CLASS__, 0, "-6"));
 		
 		$query = $this->db->from('exp_actions')
 			->where('class', substr(__CLASS__, 0, "-6"))
@@ -234,20 +233,22 @@ class Cl_varnish_admin_model extends CI_Model {
 	public function parse_tagdata($entry_id, $tagdata)
 	{
 		require_once PATH_MOD.'channel/mod.channel.php';
+		
+		$this->EE = get_instance();
 
-		ee()->TMPL->tagdata = $tagdata;
-		ee()->TMPL->tagparams['entry_id'] = $entry_id;
-		ee()->TMPL->site_ids = array($this->config->item('site_id'));
+		$this->EE->TMPL->tagdata = $tagdata;
+		$this->EE->TMPL->tagparams['entry_id'] = $entry_id;
+		$this->EE->TMPL->site_ids = array($this->config->item('site_id'));
 
-		$vars = ee()->functions->assign_variables($tagdata);
-		ee()->TMPL->var_single	= $vars['var_single'];
-		ee()->TMPL->var_pair		= $vars['var_pair'];
+		$vars = $this->EE->functions->assign_variables($tagdata);
+		$this->EE->TMPL->var_single	= $vars['var_single'];
+		$this->EE->TMPL->var_pair		= $vars['var_pair'];
 
 		$channel = new Channel;
 		$channel->fetch_custom_channel_fields();
 		$channel->fetch_custom_member_fields();
 		$channel->build_sql_query();
-		$channel->query = ee()->db->query($channel->sql);				
+		$channel->query = $this->db->query($channel->sql);
 		$channel->parse_channel_entries();
 		
 		return $channel->return_data;

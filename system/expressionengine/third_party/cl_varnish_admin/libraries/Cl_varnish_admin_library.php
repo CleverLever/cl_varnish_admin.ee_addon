@@ -54,7 +54,6 @@ class Cl_varnish_admin_library {
 	
 	public function ban_uri($uri)
 	{
-		error_log("ban: " . $uri);
 		$this->banUrl('^' . $uri . '$');
 	}
 	
@@ -77,7 +76,6 @@ class Cl_varnish_admin_library {
 	public function warm_uri($uri)
 	{
 		$url = "http://" . parse_url($this->EE->config->item('site_url'), PHP_URL_HOST) . $uri;
-		error_log("warm:" . $url);
 		return file($url);
 	}
 	
