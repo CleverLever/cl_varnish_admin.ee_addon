@@ -37,13 +37,15 @@ class Cl_varnish_admin
 		}
 	
 		// log cached item
+		$item['hash'] = sha1($this->EE->uri->uri_string());
 		$item['uri'] = "/" . $this->EE->uri->uri_string();
 		$item['created'] = date('Y-m-d G:i:s');
 		$item['expires'] = date('Y-m-d G:i:s', time() + $expires);
 		$item['warm'] = ($warm) ? 1 : 0;
+		$item['site_id'] = $this->EE->config->item('site_id');
 		
 		$this->EE->cached_items->data = $item;
-		$this->EE->cached_items->save(array('uri' => $item['uri']));
+		$this->EE->cached_items->save(array('site_id' => $this->EE->config->item('site_id'), 'hash' => $item['hash']));
 	}
 	
 	/**
@@ -82,11 +84,13 @@ class Cl_varnish_admin
 		$this->EE->output->set_header('Cache-Control: public, max-age=0');
 
 		// clear and warm requested item
-		$uri = $this->EE->input->get('uri', FALSE);
-		if ($uri)
+		$hash = $this->EE->input->get('hash', FALSE);
+		if ($hash)
 		{
-			$this->EE->cached_items->delete(array('site_id' => $this->EE->config->item('site_id'), 'uri' => $uri));
-			$this->EE->cl_varnish_admin_library->warm_uri($uri);
+			$item = $this->EE->cached_items->get($hash)->row_array();
+			
+			$this->EE->cached_items->delete(array('site_id' => $this->EE->config->item('site_id'), 'hash' => $item['hash']));
+			$this->EE->cl_varnish_admin_library->warm_uri($item['uri']);
 		}
 
 		// redirect to next expired item
@@ -94,7 +98,7 @@ class Cl_varnish_admin
 		if ($this->EE->cached_items->next_expired_item()->num_rows() > 0)
 		{
 			sleep($delay);
-			$query_string = http_build_query(array('uri' => $next_item['uri']) + $_GET); // this order matters for some stupid reason
+			$query_string = http_build_query(array('hash' => $next_item['hash']) + $_GET); // this order matters for some stupid reason
 			$this->EE->output->set_header('Location: /' . $this->EE->uri->uri_string() . "?" . $query_string);
 		} 
 		else 

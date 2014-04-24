@@ -28,27 +28,27 @@ class Cl_varnish_admin_mcp
 		
 		if (!empty($_POST)) 
 		{
-			foreach ($_POST['items'] as $uri)
+			foreach ($_POST['items'] as $hash)
 			{
-				$item = $this->EE->cached_items->get($uri)->row_array();
+				$item = $this->EE->cached_items->get($hash)->row_array();
 				
 				switch ($_POST['action']) {
 					case "clear_and_warm":
-						$this->EE->cached_items->delete(array('site_id' => $item['site_id'], 'uri' => $item['uri']));
+						$this->EE->cached_items->delete(array('site_id' => $item['site_id'], 'hash' => $item['hash']));
 						$this->EE->cl_varnish_admin_library->ban_uri($item['uri']);
 						if ($item['warm']) $this->EE->cl_varnish_admin_library->warm_uri($item['uri']);
 					break;
 					case "clear_and_force_warm":
-						$this->EE->cached_items->delete(array('site_id' => $item['site_id'], 'uri' => $item['uri']));
+						$this->EE->cached_items->delete(array('site_id' => $item['site_id'], 'hash' => $item['hash']));
 						$this->EE->cl_varnish_admin_library->ban_uri($item['uri']);
 						$this->EE->cl_varnish_admin_library->warm_uri($item['uri']);
 					break;
 					case "clear":
-						$this->EE->cached_items->delete(array('site_id' => $item['site_id'], 'uri' => $item['uri']));
+						$this->EE->cached_items->delete(array('site_id' => $item['site_id'], 'hash' => $item['hash']));
 						$this->EE->cl_varnish_admin_library->ban_uri($item['uri']);
 					break;
 					case "delete":
-						$this->EE->cached_items->delete(array('site_id' => $item['site_id'], 'uri' => $item['uri']));
+						$this->EE->cached_items->delete(array('site_id' => $item['site_id'], 'hash' => $item['hash']));
 					break;
 				}
 			}

@@ -6,6 +6,11 @@ class Cl_varnish_admin_cached_items_model extends Cl_varnish_admin_model
 	public $table = "cl_varnish_admin_cached_items";
 
 	protected $table_fields = array(
+		'hash' => array(
+				'type'			=> 'varchar',
+				'constraint'	=> 40,
+				'null'			=> FALSE
+			),
 		'site_id'	=> array(
 			'type'			=> 'int',
 			'constraint'	=> 10,
@@ -46,11 +51,11 @@ class Cl_varnish_admin_cached_items_model extends Cl_varnish_admin_model
 		parent::__construct();
 	}
 	
-	public function get($uri)
+	public function get($hash)
 	{
 		return $this->db->from($this->table)
 			->where('site_id', $this->config->item('site_id'))
-			->where('uri', $uri)->get();
+			->where('hash', $hash)->get();
 	}
 	
 	public function collection($where = array(), $limit = FALSE) 
@@ -69,8 +74,6 @@ class Cl_varnish_admin_cached_items_model extends Cl_varnish_admin_model
 	
 	public function save($where = FALSE)
 	{
-		$this->data['site_id'] = $this->config->item('site_id');
-
 		parent::save($where);
 	}
 	

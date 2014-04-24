@@ -2,7 +2,7 @@
 
 class Cl_varnish_admin_upd 
 {
-	public $version = "1.2.2";
+	public $version = "1.2.3";
 	
 	private $addon_name = "Cl_varnish_admin";
 	private $has_cp_backend = "y";
@@ -43,6 +43,33 @@ class Cl_varnish_admin_upd
 		{
 			$this->EE->load->model('Cl_varnish_admin_cached_items_model');
 			$this->EE->Cl_varnish_admin_cached_items_model->create_table();
+		}
+
+		if (version_compare($current, "1.2.2", "=="))
+		{
+			$this->EE->load->model('Cl_varnish_admin_cached_items_model', 'cached_items');
+			$this->EE->load->dbforge();
+			$this->EE->dbforge->add_column(
+				$this->EE->cached_items->table, 
+				array(
+					'hash' => array(
+							'type'			=> 'varchar',
+							'constraint'	=> 40,
+							'null'			=> FALSE
+					)
+				)
+			);
+			
+			foreach($this->EE->cached_items->collection()->result_array() as $cached_item)
+			{
+				$cached_item['hash'] = sha1($cached_item['uri']);
+
+				$this->EE->cached_items->data = $cached_item;
+				$this->EE->cached_items->save(array('uri' => $cached_item['uri']));
+			}
+			$this->EE->db->query("ALTER TABLE `" . $this->EE->db->dbprefix('cl_varnish_admin_cached_items') .  "` DROP PRIMARY KEY");
+			$this->EE->db->query("ALTER TABLE `" . $this->EE->db->dbprefix('cl_varnish_admin_cached_items') .  "` ADD PRIMARY KEY( `site_id`, `hash`)");
+			$this->EE->db->query("ALTER TABLE `" . $this->EE->db->dbprefix('cl_varnish_admin_cached_items') .  "` CHANGE `uri` `uri` VARCHAR(2000) NOT NULL DEFAULT ''");
 		}
 
 		return TRUE;

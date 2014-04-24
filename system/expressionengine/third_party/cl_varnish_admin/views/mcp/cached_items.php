@@ -16,7 +16,7 @@ $(function () {
 	<tr><th><input type="checkbox" name="select_all" value="true" class="toggle_all"></th><th>URI</th><th>Created</th><th>Expires</th><th>Warm?</th></tr>
 	<? foreach($cached_items->collection()->result_array() as $cached_item): ?>
 	<tr>
-		<td><input type="checkbox" name="items[]" value="<?=$cached_item['uri'] ?>" class="toggle"></td>
+		<td><input type="checkbox" name="items[]" value="<?=$cached_item['hash'] ?>" class="toggle"></td>
 		<td><?=$cached_item['uri'] ?></td>
 		<td><?=$cached_item['created'] ?></td>
 		<td><?=$cached_item['expires'] ?></td>
