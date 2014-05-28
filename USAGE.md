@@ -8,7 +8,7 @@ Requirements
 * [PECL Varnish extension*](http://www.php.net/manual/en/varnish.installation.php)
 
 *If you are having trouble installing the PECL Varnish extension you might need to run
-`apt-get install libvarnishapi-dev` prior to running the `pecl varnish install` command.
+`apt-get install php5-dev libvarnishapi-dev` prior to running the `pecl install varnish` command. Also ensure `extension=varnish.so` is added to your appropriate php.ini.
 
 Installation
 -----

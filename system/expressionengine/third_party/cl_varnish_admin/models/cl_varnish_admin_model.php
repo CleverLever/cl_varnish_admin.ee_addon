@@ -130,8 +130,6 @@ class Cl_varnish_admin_model extends CI_Model {
 	 */
 	public function get_act_url(string $method, array $data = array()) 
 	{
-		$this->load->helper('module_helper');
-		
 		$query = $this->db->from('exp_actions')
 			->where('class', substr(__CLASS__, 0, "-6"))
 			->where('method', $method);
