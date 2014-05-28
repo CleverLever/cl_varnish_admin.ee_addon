@@ -38,6 +38,7 @@ class Cl_varnish_admin_ext
 				case "custom":
 					foreach($rule['options'] as $option) 
 					{
+						error_log($option['expression']);
 						$this->EE->cl_varnish_admin_library->banUrl($this->EE->settings->parse_tagdata($entry_id, $option['expression']));
 						if (!empty($option['warm_url'])) $this->EE->cl_varnish_admin_library->warm_uri($this->EE->settings->parse_tagdata($entry_id, $option['warm_url']));
 					}

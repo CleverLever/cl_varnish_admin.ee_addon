@@ -80,7 +80,10 @@ class Cl_varnish_admin_settings_model extends Cl_varnish_admin_model
 		$this->data['key'] = $key;
 		$this->data['value'] = $value;
 
-		parent::save(array("key" => $key));
+		parent::save(array(
+			"site_id" => $this->data['site_id'], 
+			"key" => $this->data['key']
+		));
 	}
 	
 }

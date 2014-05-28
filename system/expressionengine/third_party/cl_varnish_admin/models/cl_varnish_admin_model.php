@@ -233,23 +233,25 @@ class Cl_varnish_admin_model extends CI_Model {
 	public function parse_tagdata($entry_id, $tagdata)
 	{
 		require_once PATH_MOD.'channel/mod.channel.php';
-		
-		$this->EE = get_instance();
 
-		$this->EE->TMPL->tagdata = $tagdata;
-		$this->EE->TMPL->tagparams['entry_id'] = $entry_id;
-		$this->EE->TMPL->site_ids = array($this->config->item('site_id'));
+		$this->TMPL->tagdata = $tagdata;
+		$this->TMPL->tagparams['entry_id'] = $entry_id;
+		$this->TMPL->site_ids = array($this->config->item('site_id'));
 
-		$vars = $this->EE->functions->assign_variables($tagdata);
-		$this->EE->TMPL->var_single	= $vars['var_single'];
-		$this->EE->TMPL->var_pair		= $vars['var_pair'];
+		$vars = $this->functions->assign_variables($tagdata);
+		$this->TMPL->var_single	= $vars['var_single'];
+		$this->TMPL->var_pair		= $vars['var_pair'];
 
 		$channel = new Channel;
 		$channel->fetch_custom_channel_fields();
 		$channel->fetch_custom_member_fields();
 		$channel->build_sql_query();
+	
+
 		$channel->query = $this->db->query($channel->sql);
 		$channel->parse_channel_entries();
+		
+		error_log($channel->return_data);
 		
 		return $channel->return_data;
 	}
