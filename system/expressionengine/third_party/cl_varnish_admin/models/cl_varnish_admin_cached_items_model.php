@@ -92,11 +92,12 @@ class Cl_varnish_admin_cached_items_model extends Cl_varnish_admin_model
 	
 	public function next_expired_item()
 	{
-		return $this->db->from($this->table)
+		$query = $this->db->from($this->table)
 			->where('site_id', $this->config->item('site_id'))
-			->where('expires <= NOW()')
+			->where('expires < NOW()')
 			->order_by('expires', 'asc')
-			->limit(1)
-			->get();
+			->limit(1);
+			
+		return $query->get();
 	}
 }

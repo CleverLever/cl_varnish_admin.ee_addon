@@ -75,8 +75,16 @@ class Cl_varnish_admin_library {
 	
 	public function warm_uri($uri)
 	{
+		$stream_content = stream_context_create(array(
+			'http' => array(
+				'method' => 'HEAD',
+				'follow_location' => FALSE, 
+				'max_redirects' => 1
+				)
+			)
+		);
 		$url = "http://" . parse_url($this->EE->config->item('site_url'), PHP_URL_HOST) . $uri;
-		return file($url);
+		return file_get_contents($url, FALSE, $stream_content);
 	}
 	
 }

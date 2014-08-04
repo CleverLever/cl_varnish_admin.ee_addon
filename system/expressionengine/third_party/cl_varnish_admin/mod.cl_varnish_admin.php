@@ -90,7 +90,6 @@ class Cl_varnish_admin
 			$item = $this->EE->cached_items->get($hash)->row_array();
 			
 			$this->EE->cached_items->delete(array('site_id' => $this->EE->config->item('site_id'), 'hash' => $item['hash']));
-			$this->EE->cl_varnish_admin_library->warm_uri($item['uri']);
 		}
 
 		// redirect to next expired item

@@ -22,6 +22,8 @@ Set your Varnish server's settings using `Add-ons -> Varnish Admin -> Server Set
 
 For more information about configuring your Varnish server's administrative interface refer to the [-T and -S options for varnishd](https://www.varnish-cache.org/docs/trunk/reference/varnishd.html).
 
+NOTE: Be sure your PHP and MySQL (which is configured to your system in some cases) timezones are set properly.
+
 Tags
 -----
 

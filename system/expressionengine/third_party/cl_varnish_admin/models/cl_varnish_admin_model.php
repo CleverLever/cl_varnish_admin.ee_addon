@@ -248,9 +248,7 @@ class Cl_varnish_admin_model extends CI_Model {
 
 		$channel->query = $this->db->query($channel->sql);
 		$channel->parse_channel_entries();
-		
-		error_log($channel->return_data);
-		
+
 		return $channel->return_data;
 	}
 	
