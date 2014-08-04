@@ -22,7 +22,7 @@ class Cl_varnish_admin_mcp
 
 	public function cached_items() 
 	{
-		$this->EE->cp->set_variable('cp_page_title', lang('cl_varnish_admin_module_name') . " (" . ucwords(str_replace("_", " ", __FUNCTION__)) . ")");
+		$this->EE->view->cp_page_title =  lang('cl_varnish_admin_module_name') . " (" . ucwords(str_replace("_", " ", __FUNCTION__)) . ")";
 		$this->EE->load->model('Cl_varnish_admin_cached_items_model', 'cached_items');
 		$this->EE->load->library('cl_varnish_admin_library');
 		
@@ -60,7 +60,7 @@ class Cl_varnish_admin_mcp
 
 	public function settings() 
 	{
-		$this->EE->cp->set_variable('cp_page_title', lang('cl_varnish_admin_module_name') . " (" . ucwords(str_replace("_", " ", __FUNCTION__)) . ")");
+		$this->EE->view->cp_page_title = lang('cl_varnish_admin_module_name') . " (" . ucwords(str_replace("_", " ", __FUNCTION__)) . ")";
 		
 		$this->EE->load->model('Cl_varnish_admin_settings_model');
 		
@@ -78,7 +78,7 @@ class Cl_varnish_admin_mcp
 	
 	public function utilities()
 	{
-		$this->EE->cp->set_variable('cp_page_title', lang('cl_varnish_admin_module_name') . " (" . ucwords(str_replace("_", " ", __FUNCTION__)) . ")");
+		$this->EE->view->cp_page_title =  lang('cl_varnish_admin_module_name') . " (" . ucwords(str_replace("_", " ", __FUNCTION__)) . ")";
 		
 		if (!empty($_POST)) 
 		{
@@ -105,7 +105,7 @@ class Cl_varnish_admin_mcp
 	
 	public function cache_clear_rules()
 	{
-		$this->EE->cp->set_variable('cp_page_title', lang('cl_varnish_admin_module_name') . " (" . ucwords(str_replace("_", " ", __FUNCTION__)) . ")");
+		$this->EE->view->cp_page_title =  lang('cl_varnish_admin_module_name') . " (" . ucwords(str_replace("_", " ", __FUNCTION__)) . ")";
 		
 		$this->EE->load->model('Cl_varnish_admin_cache_clear_rules_model', 'cache_clear_rules');
 		
