@@ -12,19 +12,19 @@ class Cl_varnish_admin_mcp
 		$this->EE->load->model('Cl_varnish_admin_settings_model');
 
 		$this->EE->cp->set_right_nav(array(
-			'Settings' => BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=cl_varnish_admin'.AMP.'method=settings',
+			// 'Settings' => BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=cl_varnish_admin'.AMP.'method=settings',
 			'Cached Items' => BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=cl_varnish_admin'.AMP.'method=cached_items',
 			'Cache Clear Rules' => BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=cl_varnish_admin'.AMP.'method=cache_clear_rules',
 			'Utilities' => BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=cl_varnish_admin'.AMP.'method=utilities',
 		));
 	}
-	public function index() { $this->EE->functions->redirect(BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=cl_varnish_admin'.AMP.'method=settings'); }
+	public function index() { $this->EE->functions->redirect(BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=cl_varnish_admin'.AMP.'method=cached_items'); }
 
 	public function cached_items() 
 	{
 		$this->EE->view->cp_page_title =  lang('cl_varnish_admin_module_name') . " (" . ucwords(str_replace("_", " ", __FUNCTION__)) . ")";
 		$this->EE->load->model('Cl_varnish_admin_cached_items_model', 'cached_items');
-		$this->EE->load->library('cl_varnish_admin_library');
+		$this->EE->load->library('cl_varnish_admin_request');
 		
 		if (!empty($_POST)) 
 		{
@@ -33,19 +33,15 @@ class Cl_varnish_admin_mcp
 				$item = $this->EE->cached_items->get($hash)->row_array();
 				
 				switch ($_POST['action']) {
-					case "clear_and_warm":
-						$this->EE->cached_items->delete(array('site_id' => $item['site_id'], 'hash' => $item['hash']));
-						$this->EE->cl_varnish_admin_library->ban_uri($item['uri']);
-						if ($item['warm']) $this->EE->cl_varnish_admin_library->warm_uri($item['uri']);
+					case "purge_and_warm":
+						if ($item['warm']) $this->EE->cl_varnish_admin_request->refresh($item['uri']);
+						else $this->EE->cl_varnish_admin_request->purge($item['uri']);
 					break;
-					case "clear_and_force_warm":
-						$this->EE->cached_items->delete(array('site_id' => $item['site_id'], 'hash' => $item['hash']));
-						$this->EE->cl_varnish_admin_library->ban_uri($item['uri']);
-						$this->EE->cl_varnish_admin_library->warm_uri($item['uri']);
+					case "purge_and_force_warm":
+						$this->EE->cl_varnish_admin_request->refresh($item['uri']);
 					break;
-					case "clear":
-						$this->EE->cached_items->delete(array('site_id' => $item['site_id'], 'hash' => $item['hash']));
-						$this->EE->cl_varnish_admin_library->ban_uri($item['uri']);
+					case "purge":
+						$this->EE->cl_varnish_admin_request->purge($item['uri']);
 					break;
 					case "delete":
 						$this->EE->cached_items->delete(array('site_id' => $item['site_id'], 'hash' => $item['hash']));
@@ -82,17 +78,23 @@ class Cl_varnish_admin_mcp
 		
 		if (!empty($_POST)) 
 		{
-			$this->EE->load->library('cl_varnish_admin_library');
+			$this->EE->load->library('cl_varnish_admin_request');
 
 			switch ($_POST['action']) {
-				case "url":
-					$this->EE->cl_varnish_admin_library->banUrl($_POST['url']);
+				case "purge":
+					$this->EE->cl_varnish_admin_request->purge($_POST['purge_url']);
 				break;
-				case "site":
-					$this->EE->cl_varnish_admin_library->banSite();
+				case "ban_path":
+					$this->EE->cl_varnish_admin_request->ban_path($_POST['path']);
 				break;
-				case "entire":
-					$this->EE->cl_varnish_admin_library->banAll();
+				case "ban_site":
+					$this->EE->cl_varnish_admin_request->ban_host(parse_url($this->EE->config->item('site_url'), PHP_URL_HOST));
+				break;
+				case "ban_all":
+					$this->EE->cl_varnish_admin_request->ban_all();
+				break;
+				case "refresh":
+					$this->EE->cl_varnish_admin_request->refresh($_POST['refresh_url']);
 				break;
 			}
 	

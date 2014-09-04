@@ -12,27 +12,48 @@ $(function () {
 <?=form_open('C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=cl_varnish_admin'.AMP.'method='.basename(__FILE__, '.php'))?>
 <h2>Utilities</h2>
 <table class="mainTable" border="0" cellspacing="0" cellpadding="0">
-	<tr><th colspan="2">Clear Varnish Cache</th></th><th></th></tr>
+	<tr><th colspan="2">Purge Item</th></th><th></th></tr>
 	<tr>
-		<td><label>Clear URL Expression</label><div class="subtext">Clear items matching the provided VCL expression.</div></td>
+		<td><label>Purge URL</label><div class="subtext">Purging an item deletes it from Varnish's memory.</div></td>
 		<td>
-			<input type="text" name="url" value="" placeholder="ex: ^/pages$">
+			<input type="text" name="purge_url" value="" placeholder="ex: http://mydomain.com/">
 		</td>
 		<td align="right">
-			<button name="action" type="submit" value="url" class="submit" style="cursor: pointer">Clear</button>
+			<button name="action" type="submit" value="purge" class="submit" style="cursor: pointer">Purge</button>
+		</td>
+	</tr>
+	<tr><th colspan="2">Ban Items</th></th><th></th></tr>	
+	<tr>
+		<td><label>Ban Path Expression</label><div class="subtext">Bans paths matching the provided VCL expression.</div></td>
+		<td>
+			<input type="text" name="path" value="" placeholder="ex: ^/pages$">
+		</td>
+		<td align="right">
+			<button name="action" type="submit" value="ban_path" class="submit" style="cursor: pointer">Ban</button>
 		</td>
 	</tr>
 	<tr>
-		<td colspan="2"><label>Clear Site Cache</label><div class="subtext">Clear items matching the current site url.</div></td>	
+		<td colspan="2"><label>Ban Site Cache</label><div class="subtext">Bans items matching the current site url.</div></td>	
 		<td align="right">
-			<button name="action" type="submit" value="site" class="submit" style="cursor: pointer">Clear Site Cache</button>
+			<button name="action" type="submit" value="ban_site" class="submit" style="cursor: pointer">Ban Site Cache</button>
 		</td>
 	</tr>
 	<tr>
-		<td colspan="2"><label>Clear Entire Cache</label></td>	
+		<td colspan="2"><label>Ban Entire Cache</label><div class="subtext">Bans all items.</div></td>	
 		<td align="right">
-			<button name="action" type="submit" value="all" class="submit" style="cursor: pointer">Clear Entire Cache</button>
+			<button name="action" type="submit" value="ban_all" class="submit" style="cursor: pointer">Ban Entire Cache</button>
 		</td>
 	</tr>
+	<tr><th colspan="2">Refresh Item</th></th><th></th></tr>	
+	<tr>
+		<td><label>Refresh URL</label><div class="subtext">Requests the specified URL but forces a cache miss so the item is refreshed.</div></td>
+		<td>
+			<input type="text" name="refresh_url" value="" placeholder="ex: http://mydomain.com/">
+		</td>
+		<td align="right">
+			<button name="action" type="submit" value="refresh" class="submit" style="cursor: pointer">Refresh</button>
+		</td>
+	</tr>
+
 </table>
 <?php echo form_close()?>

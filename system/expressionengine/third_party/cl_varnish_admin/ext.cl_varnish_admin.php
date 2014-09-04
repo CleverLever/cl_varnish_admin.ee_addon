@@ -2,10 +2,10 @@
 class Cl_varnish_admin_ext 
 {
 	public $name = "Varnish Admin";
-	public $version = "1.2.5";
+	public $version = "2.0.0";
 	public $description = "";
 	public $settings_exist = "y";
-	public $docs_url = "http://cleverlever.co/add-ons/varnish-admin";
+	public $docs_url = "http://cleverlever.co/add-on/varnish-admin";
 	
 	public function __construct() 
 	{	
@@ -17,7 +17,7 @@ class Cl_varnish_admin_ext
 
 		$this->EE->load->model('Cl_varnish_admin_settings_model', 'settings');		
 		$this->EE->load->model('Cl_varnish_admin_cache_clear_rules_model', 'cache_clear_rules');
-		$this->EE->load->library('cl_varnish_admin_library');
+		$this->EE->load->library('cl_varnish_admin_request');
 	}
 	
 	public function entry_submission_end_hook($entry_id, $entry_metadata, $entry_data)
@@ -38,15 +38,15 @@ class Cl_varnish_admin_ext
 				case "custom":
 					foreach($rule['options'] as $option) 
 					{
-						$this->EE->cl_varnish_admin_library->banUrl($this->EE->settings->parse_tagdata($entry_id, $option['expression']));
-						if (!empty($option['warm_url'])) $this->EE->cl_varnish_admin_library->warm_uri($this->EE->settings->parse_tagdata($entry_id, $option['warm_url']));
+						$this->EE->cl_varnish_admin_request->ban_path($this->EE->settings->parse_tagdata($entry_id, $option['expression']));
+						if (!empty($option['warm_url'])) $this->EE->cl_varnish_admin_request->refresh($this->EE->settings->parse_tagdata($entry_id, $option['warm_url']));
 					}
 				break;
 				case "site":
-					$this->EE->cl_varnish_admin_library->banSite();
+					$this->EE->cl_varnish_admin_request->ban_site();
 				break;
 				case "entire":
-					$this->EE->cl_varnish_admin_library->banAll();
+					$this->EE->cl_varnish_admin_request->ban_all();
 				break;
 			}
 		}
@@ -60,17 +60,17 @@ class Cl_varnish_admin_ext
 		switch ($action) {
 			case "template":
 				$template = $this->EE->settings->get_templates(NULL, array('template_id' => $template_id))->row_array();
-				$this->EE->cl_varnish_admin_library->banUrl("/{$template['group_name']}/{$template['template_name']}");
+				$this->EE->cl_varnish_admin_request->ban_path("/{$template['group_name']}/{$template['template_name']}");
 			break;
 			case "group":
 				$template = $this->EE->settings->get_templates(NULL, array('template_id' => $template_id))->row_array();
-				$this->EE->cl_varnish_admin_library->banUrl("^/{$template['group_name']}.+");
+				$this->EE->cl_varnish_admin_request->ban_path("^/{$template['group_name']}.+");
 			break;
 			case "site":
-				$this->EE->cl_varnish_admin_library->banSite();
+				$this->EE->cl_varnish_admin_request->ban_site();
 			break;
 			case "entire":
-				$this->EE->cl_varnish_admin_library->banAll();
+				$this->EE->cl_varnish_admin_request->ban_all();
 			break;
 		}
 		
@@ -89,15 +89,15 @@ class Cl_varnish_admin_ext
 				case "custom":
 					foreach($rule['options'] as $option) 
 					{
-						$this->EE->cl_varnish_admin_library->banUrl($this->EE->TMPL->parse_variables_row($option['expression'], $entry_metadata));
-						if (!empty($option['warm_url'])) $this->EE->cl_varnish_admin_library->warm_uri($option['warm_url']);
+						$this->EE->cl_varnish_admin_request->ban_path($this->EE->TMPL->parse_variables_row($option['expression'], $entry_metadata));
+						if (!empty($option['warm_url'])) $this->EE->cl_varnish_admin_request->refresh($option['warm_url']);
 					}
 				break;
 				case "site":
-					$this->EE->cl_varnish_admin_library->banSite();
+					$this->EE->cl_varnish_admin_request->ban_site();
 				break;
 				case "entire":
-					$this->EE->cl_varnish_admin_library->banAll();
+					$this->EE->cl_varnish_admin_request->ban_all();
 				break;
 			}
 		}

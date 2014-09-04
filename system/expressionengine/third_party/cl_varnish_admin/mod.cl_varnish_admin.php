@@ -37,8 +37,8 @@ class Cl_varnish_admin
 		}
 	
 		// log cached item
-		$item['hash'] = sha1($this->EE->uri->uri_string());
-		$item['uri'] = "/" . $this->EE->uri->uri_string();
+		$item['hash'] = sha1($this->EE->config->item('site_url') . $this->EE->uri->uri_string());
+		$item['uri'] = $this->EE->config->item('site_url') . $this->EE->uri->uri_string();
 		$item['created'] = date('Y-m-d G:i:s');
 		$item['expires'] = date('Y-m-d G:i:s', time() + $expires);
 		$item['warm'] = ($warm) ? 1 : 0;
@@ -75,7 +75,7 @@ class Cl_varnish_admin
 	public function warm_expired_cached_items()
 	{		
 		$this->EE->load->model('Cl_varnish_admin_cached_items_model', 'cached_items');
-		$this->EE->load->library('cl_varnish_admin_library');
+		$this->EE->load->library('cl_varnish_admin_request');
 		$this->EE->load->library('template');
 
 		$delay = $this->EE->TMPL->fetch_param('delay', 0);
@@ -88,9 +88,7 @@ class Cl_varnish_admin
 		if ($hash)
 		{
 			$item = $this->EE->cached_items->get($hash)->row_array();
-			
-			$this->EE->cached_items->delete(array('site_id' => $this->EE->config->item('site_id'), 'hash' => $item['hash']));
-			$this->EE->cl_varnish_admin_library->warm_uri($item['uri']);
+			$this->EE->cl_varnish_admin_request->refresh($item['uri']);
 		}
 
 		// redirect to next expired item

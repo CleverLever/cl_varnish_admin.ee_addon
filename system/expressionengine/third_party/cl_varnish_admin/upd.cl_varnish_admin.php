@@ -2,7 +2,7 @@
 
 class Cl_varnish_admin_upd 
 {
-	public $version = "1.2.5";
+	public $version = "2.0.0";
 	
 	private $addon_name = "Cl_varnish_admin";
 	private $has_cp_backend = "y";
@@ -39,12 +39,14 @@ class Cl_varnish_admin_upd
 	
 	function update($current = '')
 	{
+		// if less than 1.2.2 just create the cached items
 		if (version_compare($current, "1.2.2", "<"))
 		{
 			$this->EE->load->model('Cl_varnish_admin_cached_items_model');
 			$this->EE->Cl_varnish_admin_cached_items_model->create_table();
 		}
 
+		// version 1.2.2 had the cached items table but the table needs to be updated to support a hash as a primary key
 		if (version_compare($current, "1.2.2", "=="))
 		{
 			$this->EE->load->model('Cl_varnish_admin_cached_items_model', 'cached_items');
@@ -70,6 +72,12 @@ class Cl_varnish_admin_upd
 			$this->EE->db->query("ALTER TABLE `" . $this->EE->db->dbprefix('cl_varnish_admin_cached_items') .  "` DROP PRIMARY KEY");
 			$this->EE->db->query("ALTER TABLE `" . $this->EE->db->dbprefix('cl_varnish_admin_cached_items') .  "` ADD PRIMARY KEY( `site_id`, `hash`)");
 			$this->EE->db->query("ALTER TABLE `" . $this->EE->db->dbprefix('cl_varnish_admin_cached_items') .  "` CHANGE `uri` `uri` VARCHAR(2000) NOT NULL DEFAULT ''");
+		}
+		
+		// version 2.0.0 requires the full url in the cached items so we'll just start over
+		if (version_compare($current, "2.0.0", "<"))
+		{
+			$this->EE->db->query("TRUNCATE TABLE `" . $this->EE->db->dbprefix('cl_varnish_admin_cached_items'));
 		}
 
 		return TRUE;

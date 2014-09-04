@@ -5,24 +5,69 @@ Requirements
 -----
 
 * [Varnish](https://www.varnish-cache.org/trac/wiki/Installation)
-* [PECL Varnish extension*](http://www.php.net/manual/en/varnish.installation.php)
-
-*If you are having trouble installing the PECL Varnish extension you might need to run
-`apt-get install php5-dev libvarnishapi-dev` prior to running the `pecl install varnish` command. Also ensure `extension=varnish.so` is added to your appropriate php.ini.
 
 Installation
 -----
 
 Copy `/third_party/cl_varnish_admin.ee_addon` into `/system/expressionengine/third_party`.
 
+Upgrading from 1.x
+-----
+
+See the configuration section below but also note we will clear out your cache items since we the new purge ability requires the full URL to be stored.
+
 Configuration
 -----
 
-Set your Varnish server's settings using `Add-ons -> Varnish Admin -> Server Settings`. 
+Starting with version 2 Varnish Admin requires your Varnish server to be configured to include the following to support incoming 
+requests to purge, ban, and refresh cached items. You can also choose to create an ACL in the Varnish configuration to protect your varnish server.
+Refer to [this article]https://www.varnish-software.com/static/book/Cache_invalidation.html for more information.
 
-For more information about configuring your Varnish server's administrative interface refer to the [-T and -S options for varnishd](https://www.varnish-cache.org/docs/trunk/reference/varnishd.html).
+  Sample default.vcl:
+  ```
+  acl cache_admin_ips { "127.0.0.1"; }
+  sub vcl_recv {
+    if (req.request == "PURGE") {
+      if (!client.ip ~ cache_admin_ips) { error 405 "Not allowed"; }
+      return (lookup);
+    }
+    if (req.request == "BAN") {
+      if (!client.ip ~ cache_admin_ips) { error 405 "Not allowed"; }
+      ban("obj.http.x-host ~ " + req.http.x-ban-host +
+          " && obj.http.x-url ~ " + req.http.x-ban-url);
+        error 200 "Cache Object Banned";
+    }
+    if (req.request == "REFRESH") {
+      set req.request = "GET";
+      set req.hash_always_miss = true;
+    }
+  }
 
-NOTE: Be sure your PHP and MySQL (which is configured to your system in some cases) timezones are set properly.
+  sub vcl_hit {
+    if (req.request == "PURGE") {
+      if (!client.ip ~ cache_admin_ips) { error 405 "Not allowed"; }
+      purge;
+      error 200 "Cache Object Purged";
+    }
+  }
+
+  sub vcl_miss {
+    if (req.request == "PURGE") {
+      purge;
+      error 404 "Cache Object Not Found";
+    }
+  }
+
+  sub vcl_fetch {
+    set beresp.http.x-url = req.url;
+    set beresp.http.x-host = req.http.host;
+  }
+
+  sub vcl_deliver {
+    unset resp.http.x-url;
+    unset resp.http.x-host;
+  }
+  ```
 
 Tags
 -----
@@ -62,7 +107,7 @@ so you'll want to add the following to your Varnish configuration.
 ### {exp:cl_varnish_admin:warm_expired_cached_items}
 
 Warms expired cached items. Point your cronjob (or browser) to a template with this tag in it and it will run through 
-the warming process for cached items.  This is just an alternative to using the module action found in the settings. 
+the warming process for cached items. This is just an alternative to using the module action found in the settings. 
 
 #### Parameters
 
