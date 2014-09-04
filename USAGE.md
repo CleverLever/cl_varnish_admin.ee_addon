@@ -25,50 +25,50 @@ Refer to [this article]https://www.varnish-software.com/static/book/Cache_invali
 
   Sample default.vcl:
 
-  ```
-  acl cache_admin_ips { "127.0.0.1"; }
-  sub vcl_recv {
-    if (req.request == "PURGE") {
-      if (!client.ip ~ cache_admin_ips) { error 405 "Not allowed"; }
-      return (lookup);
-    }
-    if (req.request == "BAN") {
-      if (!client.ip ~ cache_admin_ips) { error 405 "Not allowed"; }
-      ban("obj.http.x-host ~ " + req.http.x-ban-host +
-          " && obj.http.x-url ~ " + req.http.x-ban-url);
-        error 200 "Cache Object Banned";
-    }
-    if (req.request == "REFRESH") {
-      set req.request = "GET";
-      set req.hash_always_miss = true;
-    }
+```
+acl cache_admin_ips { "127.0.0.1"; }
+sub vcl_recv {
+  if (req.request == "PURGE") {
+    if (!client.ip ~ cache_admin_ips) { error 405 "Not allowed"; }
+    return (lookup);
   }
+  if (req.request == "BAN") {
+    if (!client.ip ~ cache_admin_ips) { error 405 "Not allowed"; }
+    ban("obj.http.x-host ~ " + req.http.x-ban-host +
+        " && obj.http.x-url ~ " + req.http.x-ban-url);
+      error 200 "Cache Object Banned";
+  }
+  if (req.request == "REFRESH") {
+    set req.request = "GET";
+    set req.hash_always_miss = true;
+  }
+}
 
-  sub vcl_hit {
-    if (req.request == "PURGE") {
-      if (!client.ip ~ cache_admin_ips) { error 405 "Not allowed"; }
-      purge;
-      error 200 "Cache Object Purged";
-    }
+sub vcl_hit {
+  if (req.request == "PURGE") {
+    if (!client.ip ~ cache_admin_ips) { error 405 "Not allowed"; }
+    purge;
+    error 200 "Cache Object Purged";
   }
+}
 
-  sub vcl_miss {
-    if (req.request == "PURGE") {
-      purge;
-      error 404 "Cache Object Not Found";
-    }
+sub vcl_miss {
+  if (req.request == "PURGE") {
+    purge;
+    error 404 "Cache Object Not Found";
   }
+}
 
-  sub vcl_fetch {
-    set beresp.http.x-url = req.url;
-    set beresp.http.x-host = req.http.host;
-  }
+sub vcl_fetch {
+  set beresp.http.x-url = req.url;
+  set beresp.http.x-host = req.http.host;
+}
 
-  sub vcl_deliver {
-    unset resp.http.x-url;
-    unset resp.http.x-host;
-  }
-  ```
+sub vcl_deliver {
+  unset resp.http.x-url;
+  unset resp.http.x-host;
+}
+```
 
 Tags
 -----
@@ -94,16 +94,16 @@ so you'll want to add the following to your Varnish configuration.
 
   Varnish Configuration:
 
-  ```
-  sub vcl_fetch {
-	...
-	if (beresp.http.X-Parse-Esi) {
-        set beresp.do_esi = true;
-    }
-    unset beresp.http.X-Parse-Esi;
-    ...
+```
+sub vcl_fetch {
+...
+if (beresp.http.X-Parse-Esi) {
+      set beresp.do_esi = true;
   }
-  ```
+  unset beresp.http.X-Parse-Esi;
+  ...
+}
+```
 
 ### {exp:cl_varnish_admin:warm_expired_cached_items}
 
