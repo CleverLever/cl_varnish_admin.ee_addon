@@ -14,7 +14,7 @@ Copy `/third_party/cl_varnish_admin.ee_addon` into `/system/expressionengine/thi
 Upgrading from 1.x
 -----
 
-See the configuration section below but also note we will clear out your cache items since we the new purge ability requires the full URL to be stored.
+See the configuration section below but also note we will clear out your cache items since the new purge ability requires the full URL to be stored.
 
 Configuration
 -----
@@ -24,6 +24,7 @@ requests to purge, ban, and refresh cached items. You can also choose to create 
 Refer to [this article]https://www.varnish-software.com/static/book/Cache_invalidation.html for more information.
 
   Sample default.vcl:
+
   ```
   acl cache_admin_ips { "127.0.0.1"; }
   sub vcl_recv {
