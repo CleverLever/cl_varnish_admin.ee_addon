@@ -2,7 +2,7 @@
 
 class Cl_varnish_admin_upd 
 {
-	public $version = "2.0.0";
+	public $version = "2.0.1";
 	
 	private $addon_name = "Cl_varnish_admin";
 	private $has_cp_backend = "y";

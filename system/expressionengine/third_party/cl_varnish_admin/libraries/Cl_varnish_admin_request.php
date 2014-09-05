@@ -24,14 +24,12 @@ class Cl_varnish_admin_request {
 		curl_setopt_array($ch, $options);
 		
 		$response = curl_exec($ch);
-		error_log(print_r($response,TRUE));
 		
 		curl_close($ch);
 	}
 	
 	public function refresh($url) 
 	{
-		error_log("Refreshing: " . $url);
 		$options = array(
 			CURLOPT_URL => $url,
 			CURLOPT_CUSTOMREQUEST => 'REFRESH',
@@ -44,7 +42,6 @@ class Cl_varnish_admin_request {
 		curl_setopt_array($ch, $options);
 		
 		$response = curl_exec($ch);
-		error_log(print_r($response,TRUE));
 		
 		curl_close($ch);
 	}
@@ -67,7 +64,6 @@ class Cl_varnish_admin_request {
 		curl_setopt_array($ch, $options);
 		
 		$response = curl_exec($ch);
-		error_log(print_r($response,TRUE));
 		
 		curl_close($ch);
 	}
@@ -82,6 +78,7 @@ class Cl_varnish_admin_request {
 	public function ban_host($host)
 	{
 		$path = '.*';
+		$host = parse_url($host, PHP_URL_HOST);
 
 		$this->ban($host, $path);
 	}

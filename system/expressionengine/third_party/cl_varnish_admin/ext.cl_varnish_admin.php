@@ -2,7 +2,7 @@
 class Cl_varnish_admin_ext 
 {
 	public $name = "Varnish Admin";
-	public $version = "2.0.0";
+	public $version = "2.0.1";
 	public $description = "";
 	public $settings_exist = "y";
 	public $docs_url = "http://cleverlever.co/add-on/varnish-admin";
@@ -43,7 +43,7 @@ class Cl_varnish_admin_ext
 					}
 				break;
 				case "site":
-					$this->EE->cl_varnish_admin_request->ban_site();
+					$this->EE->cl_varnish_admin_request->ban_host($this->EE->config->item('site_url'));
 				break;
 				case "entire":
 					$this->EE->cl_varnish_admin_request->ban_all();
@@ -67,7 +67,7 @@ class Cl_varnish_admin_ext
 				$this->EE->cl_varnish_admin_request->ban_path("^/{$template['group_name']}.+");
 			break;
 			case "site":
-				$this->EE->cl_varnish_admin_request->ban_site();
+				$this->EE->cl_varnish_admin_request->ban_host($this->EE->config->item('site_url'));
 			break;
 			case "entire":
 				$this->EE->cl_varnish_admin_request->ban_all();
@@ -94,7 +94,7 @@ class Cl_varnish_admin_ext
 					}
 				break;
 				case "site":
-					$this->EE->cl_varnish_admin_request->ban_site();
+					$this->EE->cl_varnish_admin_request->ban_host($this->EE->config->item('site_url'));
 				break;
 				case "entire":
 					$this->EE->cl_varnish_admin_request->ban_all();
