@@ -113,7 +113,7 @@ class Cl_varnish_admin_mcp
 		
 		if (!empty($_POST)) 
 		{
-			if (isset($_POST['delete'])) $this->EE->cache_clear_rules->delete($_POST['delete']);
+			if (isset($_POST['delete'])) $this->EE->cache_clear_rules->delete(array('id' => $_POST['delete']));
 			else
 			{
 				foreach ($_POST['settings'] as $key => $value) 
