@@ -38,7 +38,7 @@ class Cl_varnish_admin
 	
 		// log cached item
 		$item['hash'] = sha1($this->EE->config->item('site_url') . $this->EE->uri->uri_string());
-		$item['uri'] = $this->EE->config->item('site_url') . $this->EE->uri->uri_string();
+		$item['uri'] = strtolower($this->EE->config->item('site_url') . $this->EE->uri->uri_string());
 		$item['created'] = date('Y-m-d G:i:s');
 		$item['expires'] = date('Y-m-d G:i:s', time() + $expires);
 		$item['warm'] = ($warm) ? 1 : 0;
